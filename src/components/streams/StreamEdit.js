@@ -1,17 +1,32 @@
+import _ from 'lodash';
 import React from "react";
 import { connect } from "react-redux";
 import { editStream, fetchStream } from "../../actions";
+import StreamForm from "./StreamForm";
 
 class StreamEdit extends React.Component {
   componentDidMount() {
     this.props.fetchStream(this.props.match.params.id)
   }
 
+  onSubmit = (formValues, id) => {
+    this.props.editStream(this.props.match.params.id, formValues); 
+  };
+
   render() {
     if (!this.props.stream) {
       return <div>Loading</div>
     }
-    return <div>{this.props.stream.tittle}</div>;
+    return (
+      <div>
+        <h3>Edit a stream</h3>
+        <StreamForm  
+        //initial values takes all the properties with same name from field in redux form that match this.props.stream 
+        //_.pick from lodash lets you pick out exactly which values you want from this.props.stream object
+        initialValues={_.pick(this.props.stream, 'title', 'description')} 
+        onSubmit={this.onSubmit} />
+      </div>
+    );
   }
 }
 
